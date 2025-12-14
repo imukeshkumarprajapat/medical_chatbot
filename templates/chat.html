@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Medical Chatbot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap & FontAwesome -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="bg-light">
+
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow">
+        <!-- Header -->
+        <div class="card-header bg-primary text-white d-flex align-items-center">
+          <img src="https://cdn-icons-png.flaticon.com/512/387/387569.png" class="rounded-circle mr-2" width="40" height="40">
+          <div>
+            <h5 class="mb-0">Medical Chatbot</h5>
+            <small>Ask me anything!</small>
+          </div>
+        </div>
+
+        <!-- Chat Body -->
+        <div id="chatBody" class="card-body overflow-auto" style="height: 400px;">
+          <!-- Messages will appear here -->
+        </div>
+
+        <!-- Footer -->
+        <div class="card-footer">
+          <form id="chatForm" class="d-flex">
+            <input type="text" id="userInput" name="msg" class="form-control mr-2" placeholder="Type your message..." autocomplete="off" required>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+<script>
+$(function() {
+  $("#chatForm").on("submit", function(event) {
+    event.preventDefault();
+    const rawText = $("#userInput").val().trim();
+    if (!rawText) return;
+
+    const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+    // User message bubble
+    const userHtml = `
+      <div class="d-flex justify-content-end mb-3">
+        <div class="bg-primary text-white p-2 rounded">
+          ${rawText}
+          <div class="text-right"><small>${time}</small></div>
+        </div>
+      </div>`;
+    $("#chatBody").append(userHtml);
+    $("#userInput").val("");
+    $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
+
+    // AJAX call to backend
+    $.ajax({
+      type: "POST",
+      url: "/get",
+      data: { msg: rawText },
+      dataType: "text"
+    }).done(function(data) {
+      const botHtml = `
+        <div class="d-flex justify-content-start mb-3">
+          <div class="bg-light border p-2 rounded">
+            ${data}
+            <div class="text-left"><small>${time}</small></div>
+          </div>
+        </div>`;
+      $("#chatBody").append(botHtml);
+      $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
+    }).fail(function() {
+      const errorHtml = `
+        <div class="d-flex justify-content-start mb-3">
+          <div class="bg-danger text-white p-2 rounded">
+            Error: Could not get response
+          </div>
+        </div>`;
+      $("#chatBody").append(errorHtml);
+      $("#chatBody").scrollTop($("#chatBody")[0].scrollHeight);
+    });
+  });
+});
+</script>
+</body>
+</html>

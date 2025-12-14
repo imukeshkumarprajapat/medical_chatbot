@@ -1,0 +1,30 @@
+{
+    "sourceFile": "strore_index.py",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1765622344840,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1765622439330,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,9 +17,9 @@\n \r\n \r\n extracted_data=load_pdf_files(data='data/')\r\n filter_data=filter_to_minimal_docs(extracted_data)\r\n-text_chunks=text_split(filter_data)\r\n+texts_chunk=text_split(filter_data)\r\n \r\n embeddings=download_embeddings()\r\n \r\n \r\n@@ -50,8 +50,8 @@\n \r\n \r\n docsearch=PineconeVectorStore.from_documents(\r\n     documents=texts_chunk,\r\n-    embedding=embedding,\r\n+    embedding=embeddings,\r\n     index_name=index_name\r\n )\r\n #यह code आपके  को embeddings में बदलकर Pinecone index में store कर रहा है, ताकि बाद में आप fast similarity search कर सकें।\r\n"
+                },
+                {
+                    "date": 1765622469643,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -45,13 +45,10 @@\n # Access the index (correct method)\r\n index = pc.Index(index_name)\r\n \r\n \r\n-\r\n-\r\n-\r\n docsearch=PineconeVectorStore.from_documents(\r\n     documents=texts_chunk,\r\n-    embedding=embeddings,\r\n+    embeddings=embeddings,\r\n     index_name=index_name\r\n )\r\n #यह code आपके  को embeddings में बदलकर Pinecone index में store कर रहा है, ताकि बाद में आप fast similarity search कर सकें।\r\n"
+                },
+                {
+                    "date": 1765622622962,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,9 +27,9 @@\n pc=Pinecone(api_key=PINECONE_API_KEY)\r\n \r\n \r\n \r\n-index_name = \"medical-bot\"\r\n+index_name = \"medical-chatbot\"\r\n \r\n # Initialize Pinecone client\r\n #pc = Pinecone(api_key=PINECONE_API_KEY)\r\n \r\n"
+                }
+            ],
+            "date": 1765622344840,
+            "name": "Commit-0",
+            "content": "from dotenv import load_dotenv\r\nfrom pinecone import Pinecone\r\nimport os\r\nload_dotenv()\r\nfrom langchain_community.embeddings import HuggingFaceEmbeddings\r\nfrom pinecone import Pinecone, ServerlessSpec\r\nfrom langchain_pinecone import PineconeVectorStore\r\n\r\nfrom src.helper import load_pdf_files, filter_to_minimal_docs,text_split, download_embeddings\r\n\r\nPINECONE_API_KEY=os.getenv(\"PINECONE_API_KEY\")\r\nGROQ_API_KEY=os.getenv(\"GROQ_API_KEY\")\r\n\r\n\r\nos.environ[\"PINECONE_API_KEY\"]=PINECONE_API_KEY\r\nos.environ[\"GROQ_API_KEY\"]=GROQ_API_KEY\r\n\r\n\r\nextracted_data=load_pdf_files(data='data/')\r\nfilter_data=filter_to_minimal_docs(extracted_data)\r\ntext_chunks=text_split(filter_data)\r\n\r\nembeddings=download_embeddings()\r\n\r\n\r\n\r\npc=Pinecone(api_key=PINECONE_API_KEY)\r\n\r\n\r\n\r\nindex_name = \"medical-bot\"\r\n\r\n# Initialize Pinecone client\r\n#pc = Pinecone(api_key=PINECONE_API_KEY)\r\n\r\n# Create index if it doesn't exist\r\nif not pc.has_index(index_name):\r\n    pc.create_index(\r\n        name=index_name,\r\n        dimension=384,  # dimension of your embedding model\r\n        metric=\"cosine\",  # cosine similarity\r\n        spec=ServerlessSpec(cloud=\"aws\", region=\"us-east-1\")\r\n    )\r\n\r\n# Access the index (correct method)\r\nindex = pc.Index(index_name)\r\n\r\n\r\n\r\n\r\n\r\ndocsearch=PineconeVectorStore.from_documents(\r\n    documents=texts_chunk,\r\n    embedding=embedding,\r\n    index_name=index_name\r\n)\r\n#यह code आपके  को embeddings में बदलकर Pinecone index में store कर रहा है, ताकि बाद में आप fast similarity search कर सकें।\r\n"
+        }
+    ]
+}

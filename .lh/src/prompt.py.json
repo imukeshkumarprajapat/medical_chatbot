@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/prompt.py",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1765620958092,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1765620958092,
+            "name": "Commit-0",
+            "content": "system_prompt = (\r\n    \"You are a medical assistant for question-answering tasks. \"\r\n    \"Use the following pieces of retrieved context to answer the question. \"\r\n    \"If you don't know the answer, say that you don't know. \"\r\n    \"Use three sentences maximum and keep the answer concise.\\n{context}\"\r\n)\r\n"
+        }
+    ]
+}
