@@ -18,3 +18,7 @@ activate uv"""
 """bash 
 pip install -r requirements.txt
 """
+
+
+
+
